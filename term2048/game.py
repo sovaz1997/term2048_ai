@@ -12,7 +12,7 @@ init(autoreset=True)
 
 from term2048 import keypress
 from term2048.board import Board
-
+from term2048 import ai_solution
 class Game(object):
     """
     A 2048 game
@@ -27,7 +27,7 @@ class Game(object):
     }
 
     __is_windows = os.name == 'nt'
-
+    
     COLORS = {
         2:    Fore.GREEN,
         4:    Fore.BLUE + Style.BRIGHT,
@@ -62,7 +62,7 @@ class Game(object):
 
     def __init__(self, scores_file=SCORES_FILE, colors=COLORS,
                  store_file=STORE_FILE, clear_screen=True,
-                 mode=None, azmode=False, **kws):
+                 mode=None, azmode=False, ai=False,**kws):
         """
         Create a new game.
             scores_file: file to use for the best score (default
@@ -78,7 +78,7 @@ class Game(object):
         self.scores_file = scores_file
         self.store_file = store_file
         self.clear_screen = clear_screen
-
+        self.ai = ai
         self.__colors = colors
         self.__azmode = azmode
 
@@ -133,6 +133,7 @@ class Game(object):
         """
         read and return a move to pass to a board
         """
+
         k = keypress.getKey()
         return Game.__dirs.get(k)
 
@@ -221,16 +222,23 @@ class Game(object):
                 print(self.__str__(margins=margins))
                 if self.board.won() or not self.board.canMove():
                     break
-                m = self.readMove()
 
-                if (m == pause_key):
-                    self.saveBestScore()
-                    if self.store():
-                        print("Game successfully saved. "
-                              "Resume it with `term2048 --resume`.")
-                        return self.score
-                    print("An error ocurred while saving your game.")
-                    return
+                if not self.ai:
+                    m = self.readMove()
+
+                    if (m == pause_key):
+                        self.saveBestScore()
+                        if self.store():
+                            print("Game successfully saved. "
+                                  "Resume it with `term2048 --resume`.")
+                            return self.score
+                        print("An error ocurred while saving your game.")
+                        return
+                else:
+                    m = ai_solution.get_move(self)
+                    if m == Board.PAUSE:
+                        print("Tried to initiate pause as AI, exiting")
+                        return
 
                 self.incScore(self.board.move(m))
 
