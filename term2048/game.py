@@ -235,7 +235,7 @@ class Game(object):
                         print("An error ocurred while saving your game.")
                         return
                 else:
-                    m = ai_solution.get_move(self)
+                    m = ai_solution.get_ai_move(self)
                     if m == Board.PAUSE:
                         print("Tried to initiate pause as AI, exiting")
                         return

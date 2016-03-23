@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import random
+import sys
 
 # PY3 compat
 try:
@@ -15,7 +16,7 @@ class Board(object):
 
     UP, DOWN, LEFT, RIGHT, PAUSE = 1, 2, 3, 4, 5
 
-    GOAL = 2048
+    GOAL = 4096
     SIZE = 4
 
     def __init__(self, goal=GOAL, size=SIZE, **kws):
@@ -26,6 +27,11 @@ class Board(object):
         self.cells = [[0]*self.__size for _ in xrange(self.__size)]
         self.addTile()
         self.addTile()
+
+
+    def prvc(self):
+        if sys._getframe(2).f_code.co_name == 'get_ai_move':
+            raise(Exception('CHEATER'))
 
     def size(self):
         """return the board size"""
@@ -64,6 +70,7 @@ class Board(object):
         return len(self.getEmptyCells()) == 0
 
     def addTile(self, value=None, choices=([2]*9+[4])):
+        self.prvc()
         """
         add a random tile in an empty cell
           value: value of the tile to add.
@@ -84,6 +91,7 @@ class Board(object):
         return self.cells[y][x]
 
     def setCell(self, x, y, v):
+        self.prvc()
         """set the cell value at x,y"""
         self.cells[y][x] = v
 
@@ -96,10 +104,12 @@ class Board(object):
         return [self.getCell(x, i) for i in self.__size_range]
 
     def setLine(self, y, l):
+        self.prvc()
         """set the y-th line, starting at 0"""
         self.cells[y] = l[:]
 
     def setCol(self, x, l):
+        self.prvc()
         """set the x-th column, starting at 0"""
         for i in xrange(0, self.__size):
             self.setCell(x, i, l[i])
@@ -111,6 +121,7 @@ class Board(object):
                 for y in self.__size_range if self.getCell(x, y) == 0]
 
     def __collapseLineOrCol(self, line, d):
+        self.prvc()
         """
         Merge tiles in a line or column according to a direction and return a
         tuple with the new line and the score for the move on this line
@@ -138,6 +149,7 @@ class Board(object):
         return (line, pts)
 
     def __moveLineOrCol(self, line, d):
+        self.prvc()
         """
         Move a line or column to a given direction (d)
         """
@@ -147,6 +159,7 @@ class Board(object):
         return [0] * (self.__size - len(nl)) + nl
 
     def move(self, d, add_tile=True):
+        self.prvc()
         """
         move and return the move score
         """
