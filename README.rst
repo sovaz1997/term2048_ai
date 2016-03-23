@@ -1,3 +1,5 @@
+Lambda fork of term2048 adapted for AI play
+
 ========
 term2048
 ========
@@ -25,59 +27,29 @@ term2048
 
 Install
 -------
+Clone repo
 
 .. code-block::
 
-    pip install term2048
+    git clone <url>
 
-To upgrade a previous installation, use:
-
+In the repo set branch to AI
 .. code-block::
-
-    pip install -U term2048
+    git checkout ai
 
 Play
 ----
 
+To run in manual controls mode:
 .. code-block::
+    python run.py
+Then use arrow keys to move.
 
-    term2048
+To run in ai solution mode:
+.. code-block::
+    python run.py -ai
+And watch the game!
 
-Then use arrow keys to move. Since version 0.2.1 VI keys (h,j,k,l) are also
-supported.
+To change the AI behaviour edit term2048.ai_solution.get_move.
+All instructions are inside ai_solution.py
 
-Use ``-h`` to check the list of available options, and ``--rules`` for the
-game rules. Press ``<space>`` at any time during the game to pause the game
-(since 0.2.5).
-
-Tests
------
-
-Clone this repo, then: ::
-
-    [sudo] make deps
-    make check
-
-Note: while ``term2048`` should work on Windows, tests are meant to run on
-UNIX-like OSes and ``term2048.keypress``-related tests could fail if run on
-Windows.
-
-Contributions
--------------
-
-* ``--version`` flag added by @aminb
-* ``--rules`` flag added by @cardern
-* Short ``-r`` and ``-v`` flags added by @yankuangshi
-* Resume feature added by @pravj
-
-v0.2.0
-~~~~~~
-
-* Python 2.6 and 3.x support by @shaunduncan
-* Tests instructions fixed by @olafleur
-* Spawn probabilities fixed by @frankh
-* Colors improved by @idosch
-* hjkl keys support by @aminb
-* Windows support by @valtron
-* AZ mode by @JosephRedfern
-* The first file-related tests were added by @taeram
