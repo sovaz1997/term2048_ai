@@ -1,77 +1,72 @@
-import random
+import random, copy
+
+UP, DOWN, LEFT, RIGHT = 1, 2, 3, 4
+
 def hole(colrow):
 	hole = False
 	for i in colrow:
-		if i != 0:
+		if i == 0 and not(hole):
 			hole = True
-		if hole and i == 0:
+		if hole and i != 0:
 			return True
 	return False
 def repeats(colrow):
 	b = colrow[0]
 	for i in range(1, len(colrow)):
-		if b == i:
+		if b == colrow[i] and b != 0:
 			return True
-		b = i
+		b = colrow[i]
 	return False
 def is_empty(colrow):
 	for i in colrow:
 		if i != 0:
 			return False
 	return True
-def try_left():
+def try_left(game):
 	hole_row = -1
 	for i in range(len(game.board.cells)): 
 		if hole(game.board.cells[i]) or repeats(game.board.cells[i]):
 			hole_row = i
 	if hole_row != -1:
 		return LEFT
-	empty_row = -1
-	for i in range(len(game.board.cells)): 
-		if is_empty(game.board.cells[i]):
-			empty_row = i
-	if empty_row != -1:
-		return DOWN
 	raise Exception
-def try_down():
+def try_right(game):
+	hole_row = -1
+	for i in range(len(game.board.cells)): 
+		copyl = game.board.cells[i]
+		copyl.reverse()
+		if hole(copyl) or repeats(copyl):
+			hole_row = i
+	if hole_row != -1:
+		return RIGHT
+	raise Exception
+def try_down(game):
 	hole_col = -1
-	for i in range(len(game.board.cells[0])): 
-		if hole(game.board.getCol(i)) or repeats(game.board.getCol(i)):
+	for i in range(len(game.board.cells[0])):
+		copyl = game.board.getCol(i)
+		copyl.reverse() 
+		if hole(copyl) or repeats(copyl):
 			hole_col = i
 	if hole_col != -1:
 		return DOWN
-	empty_col = -1
-	for i in range(len(game.board.cells[0])): 
-		if is_empty(game.board.getCol(i)):
-			empty_row = i
-	if empty_row != -1:
-		return LEFT
 	raise Exception
 def get_ai_move(game):
-	UP, DOWN, LEFT, RIGHT = 1, 2, 3, 4
 	downrow = game.board.getLine(3)
 	leftcol = game.board.getCol(0)
-	if 0 in downrow and 0 in leftcol:
-		try:
-			return try_left()
-		except:
-			pass
-	if 0 in downrow:
-		try:
-			return try_down()
-		except:
-			pass
-	if repeats(downrow):
-		return LEFT
-	if repeats(leftcol):
-		return DOWN
 	try:
-		return try_down()
+		return try_down(game)
 	except:
-		try:
-			return try_left()
-		except:
-			pass
+		pass
+	try:
+		return try_left(game)
+	except:
+		pass
+	try:
+		return try_right(game)
+	except:
+		pass
+
+	
 	
 	
 
